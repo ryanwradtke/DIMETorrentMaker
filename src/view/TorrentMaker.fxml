@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import java.util.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane id="MainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="controller.TorrentMakerController">
+  <children>
+    <Text layoutX="14.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="DIME Torrent Maker">
+      <font>
+        <Font size="18.0" />
+      </font>
+    </Text>
+    <Label fx:id="messageBar" alignment="TOP_RIGHT" layoutX="188.0" layoutY="11.0" prefWidth="398.22265625" text="" textAlignment="RIGHT" textFill="RED" underline="true" />
+    <Separator prefWidth="600.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="31.0" />
+    <VBox id="VBox" alignment="CENTER" spacing="5.0" AnchorPane.bottomAnchor="27.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="39.0">
+      <children>
+        <HBox id="HBox" alignment="CENTER" prefWidth="572.0" spacing="5.0">
+          <children>
+            <TextField fx:id="sourcePathInput" alignment="TOP_LEFT" editable="true" minHeight="22.0" prefWidth="502.0" promptText="Choose Directory" styleClass="required-field" HBox.hgrow="ALWAYS" />
+            <Button id="sourcePathButton" mnemonicParsing="false" onAction="#sourceButtonFired" prefHeight="22.0" prefWidth="70.0" text="Source" />
+          </children>
+        </HBox>
+        <HBox id="HBox" alignment="CENTER" prefWidth="572.0" spacing="5.0">
+          <children>
+            <TextField fx:id="outputFileInput" alignment="TOP_LEFT" editable="true" minHeight="22.0" prefWidth="502.0" promptText="Choose Directory" styleClass="required-field" HBox.hgrow="ALWAYS" />
+            <Button id="outputPathButton" mnemonicParsing="false" onAction="#outputButtonFired" prefHeight="22.0" prefWidth="70.0" text="Output" />
+          </children>
+        </HBox>
+        <TextField id="artistInput" fx:id="artistInfoInput" minHeight="22.0" prefWidth="572.0" promptText="Artist:" styleClass="required-field" />
+        <TextField id="titleInput" fx:id="titleInfoInput" minHeight="22.0" prefWidth="572.0" promptText="Bootleg Title:" styleClass="required-field" />
+        <TextField id="venueInput" fx:id="venueInfoInput" minHeight="22.0" prefWidth="572.0" promptText="Venue, City, Country, Date: (YYYY-MM-DD)" styleClass="required-field" />
+        <TextField id="formatInput" fx:id="formatInfoInput" minHeight="22.0" prefWidth="572.0" promptText="Format (NTSC or PAL), Audio Codec, A/V Bit Rates, Aspect Ratio: (For Videos)" />
+        <TextArea id="trackInput" fx:id="trackInfoInput" minHeight="22.0" prefHeight="244.0" prefWidth="572.0" promptText="Track Listing:" styleClass="required-field" wrapText="true" />
+        <TextArea id="lineupInput" fx:id="lineupInfoInput" minHeight="22.0" prefHeight="110.0" prefWidth="572.0" promptText="Line Up:" styleClass="required-field" wrapText="true" />
+        <TextArea fx:id="artworkInfoInput" minHeight="22.0" prefHeight="44.0" prefWidth="572.0" promptText="Artwork Info:" wrapText="true" />
+        <TextArea id="sourceInput" fx:id="sourceInfoInput" minHeight="22.0" prefHeight="44.0" prefWidth="572.0" promptText="Source and/or Lineage:" styleClass="required-field" wrapText="true" />
+        <TextArea id="notesInput" fx:id="notesInfoInput" minHeight="22.0" prefHeight="88.0" prefWidth="572.0" promptText="Notes:" wrapText="true" />
+      </children>
+    </VBox>
+    <Button id="createTorrentButton" layoutX="472.0" layoutY="767.0" mnemonicParsing="false" onAction="#createTorrentButtonFired" text="Create Torrent" />
+  </children>
+  <stylesheets>
+    <URL value="@TorrentMaker.css" />
+  </stylesheets>
+</AnchorPane>
