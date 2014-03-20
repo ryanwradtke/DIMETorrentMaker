@@ -39,7 +39,7 @@ public class TestDrectory {
 
         System.out.println("Making MD5 file...............");
         try {
-            md5 = MD5Checksum.makeMD5File(sourceDirectory, fileType);
+            md5 = MD5Checksum.makeMD5File(sourceDirectory);
         } catch (Exception exception) {
             System.out.println("Unable to make MD5 file.");
             return;
@@ -51,7 +51,7 @@ public class TestDrectory {
         info[2] = "Test";
         info[3] = "Test";
         info[4] = "Test";
-        info[5] = FileList.fileList(sourceDirectory);
+        info[5] = FileTools.fileList(sourceDirectory);
         info[6] = "Test";
         info[7] = md5;
         info[8] = "Test";

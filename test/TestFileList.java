@@ -1,6 +1,6 @@
 
 import java.io.File;
-import resources.FileList;
+import resources.FileTools;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -14,6 +14,6 @@ import resources.FileList;
  */
 public class TestFileList {
     public static void main(String[] args) {
-        System.out.println(FileList.fileList(new File("~/Desktop/This is a Torrent Test/")));
+        System.out.println(FileTools.fileList(new File("~/Desktop/This is a Torrent Test")));
     }
 }
