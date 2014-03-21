@@ -1,5 +1,6 @@
 
 import java.io.File;
+import java.nio.file.Path;
 import resources.FileTools;
 
 /*
@@ -14,6 +15,15 @@ import resources.FileTools;
  */
 public class TestFileList {
     public static void main(String[] args) {
-        System.out.println(FileTools.fileList(new File("~/Desktop/This is a Torrent Test")));
+         File file = new File("/Users/Ryan/Desktop");
+         File[] files = file.listFiles();
+         Path path = files[0].toPath();
+         
+         
+         System.out.println(path.subpath((path.getNameCount() - 1), path.getNameCount()));
+         
+//         for (File f : files) {
+//             System.out.println(f.toPath());
+//         }
     }
 }
