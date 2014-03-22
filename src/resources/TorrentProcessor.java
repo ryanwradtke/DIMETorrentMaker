@@ -34,7 +34,6 @@
  * More information about Java Bittorrent API:
  *    http://sourceforge.net/projects/bitext/
  */
-
 package resources;
 
 import java.io.*;
@@ -46,6 +45,7 @@ import java.net.MalformedURLException;
 /**
  *
  * Class enabling to process a torrent file
+ *
  * @author Baptiste Dubuis
  * @version 0.1
  */
@@ -53,12 +53,11 @@ public class TorrentProcessor {
 
     private TorrentFile torrent;
 
-
-    public TorrentProcessor(TorrentFile torrent){
+    public TorrentProcessor(TorrentFile torrent) {
         this.torrent = torrent;
     }
 
-    public TorrentProcessor(){
+    public TorrentProcessor() {
         this.torrent = new TorrentFile();
     }
 
@@ -70,7 +69,6 @@ public class TorrentProcessor {
 //    public Map parseTorrent(String filename){
 //        return this.parseTorrent(new File(filename));
 //    }
-
 //    /**
 //     * Given a File (supposed to be a torrent), parse it and represent it as a Map
 //     * @param file File
@@ -82,50 +80,67 @@ public class TorrentProcessor {
 //        } catch(IOException ioe){}
 //        return null;
 //    }
-
     /**
-     * Given a Map, retrieve all useful information and represent it as a TorrentFile object
+     * Given a Map, retrieve all useful information and represent it as a
+     * TorrentFile object
+     *
      * @param m Map
      * @return TorrentFile
      */
-    public TorrentFile getTorrentFile(Map m){
-        if(m == null)
+    public TorrentFile getTorrentFile(Map m) {
+        if (m == null) {
             return null;
-        if(m.containsKey("announce")) // mandatory key
+        }
+        if (m.containsKey("announce")) // mandatory key
+        {
             this.torrent.announceURL = new String((byte[]) m.get("announce"));
-        else
+        } else {
             return null;
-        if(m.containsKey("comment")) // optional key
+        }
+        if (m.containsKey("comment")) // optional key
+        {
             this.torrent.comment = new String((byte[]) m.get("comment"));
-        if(m.containsKey("created by")) // optional key
+        }
+        if (m.containsKey("created by")) // optional key
+        {
             this.torrent.createdBy = new String((byte[]) m.get("created by"));
-        if(m.containsKey("creation date")) // optional key
+        }
+        if (m.containsKey("creation date")) // optional key
+        {
             this.torrent.creationDate = (Long) m.get("creation date");
-        if(m.containsKey("encoding")) // optional key
+        }
+        if (m.containsKey("encoding")) // optional key
+        {
             this.torrent.encoding = new String((byte[]) m.get("encoding"));
+        }
 
         //Store the info field data
-        if(m.containsKey("info")){
+        if (m.containsKey("info")) {
             Map info = (Map) m.get("info");
-            try{
+            try {
 
                 this.torrent.info_hash_as_binary = Utils.hash(BEncoder.encode(info));
                 this.torrent.info_hash_as_hex = Utils.byteArrayToByteString(
-                                                this.torrent.info_hash_as_binary);
+                        this.torrent.info_hash_as_binary);
                 this.torrent.info_hash_as_url = Utils.byteArrayToURLString(
-                                                this.torrent.info_hash_as_binary);
-            }catch(IOException ioe){return null;}
-            if (info.containsKey("name"))
-                this.torrent.saveAs = new String((byte[]) info.get("name"));
-            if (info.containsKey("piece length"))
-                this.torrent.pieceLength = ((Long) info.get("piece length")).intValue();
-            else
+                        this.torrent.info_hash_as_binary);
+            } catch (IOException ioe) {
                 return null;
+            }
+            if (info.containsKey("name")) {
+                this.torrent.saveAs = new String((byte[]) info.get("name"));
+            }
+            if (info.containsKey("piece length")) {
+                this.torrent.pieceLength = ((Long) info.get("piece length")).intValue();
+            } else {
+                return null;
+            }
 
             if (info.containsKey("pieces")) {
                 byte[] piecesHash2 = (byte[]) info.get("pieces");
-                if (piecesHash2.length % 20 != 0)
+                if (piecesHash2.length % 20 != 0) {
                     return null;
+                }
 
                 for (int i = 0; i < piecesHash2.length / 20; i++) {
                     byte[] temp = Utils.subArray(piecesHash2, i * 20, 20);
@@ -137,17 +152,18 @@ public class TorrentProcessor {
                             byteArrayToURLString(
                                     temp));
                 }
-            } else
+            } else {
                 return null;
+            }
 
             if (info.containsKey("files")) {
                 List multFiles = (List) info.get("files");
                 this.torrent.total_length = 0;
                 for (int i = 0; i < multFiles.size(); i++) {
                     this.torrent.length.add(((Long) ((Map) multFiles.get(i)).
-                                             get("length")).intValue());
+                            get("length")).intValue());
                     this.torrent.total_length += ((Long) ((Map) multFiles.get(i)).
-                                                  get("length")).intValue();
+                            get("length")).intValue();
 
                     List path = (List) ((Map) multFiles.get(i)).get(
                             "path");
@@ -162,13 +178,15 @@ public class TorrentProcessor {
                 this.torrent.total_length = ((Long) info.get("length")).intValue();
                 this.torrent.name.add(new String((byte[]) info.get("name")));
             }
-        }else
+        } else {
             return null;
+        }
         return this.torrent;
     }
 
     /**
      * Sets the TorrentFile object of the Publisher equals to the given one
+     *
      * @param torr TorrentFile
      */
     public void setTorrent(TorrentFile torr) {
@@ -177,6 +195,7 @@ public class TorrentProcessor {
 
     /**
      * Updates the TorrentFile object according to the given parameters
+     *
      * @param url The announce url
      * @param pLength The length of the pieces of the torrent
      * @param comment The comments for the torrent
@@ -184,7 +203,7 @@ public class TorrentProcessor {
      * @param filename The path of the file to be added to the torrent
      */
     public void setTorrentData(String url, int pLength, String comment,
-                               String encoding, String filename) {
+            String encoding, String filename) {
         this.torrent.announceURL = url;
         this.torrent.pieceLength = pLength * 1024;
         this.torrent.createdBy = Constants.CLIENT;
@@ -196,6 +215,7 @@ public class TorrentProcessor {
 
     /**
      * Updates the TorrentFile object according to the given parameters
+     *
      * @param url The announce url
      * @param pLength The length of the pieces of the torrent
      * @param comment The comments for the torrent
@@ -205,7 +225,7 @@ public class TorrentProcessor {
      * @throws java.lang.Exception
      */
     public void setTorrentData(String url, int pLength, String comment,
-                               String encoding, String name, List filenames) throws Exception {
+            String encoding, String name, List filenames) throws Exception {
         this.torrent.announceURL = url;
         this.torrent.pieceLength = pLength * 1024;
         this.torrent.comment = comment;
@@ -218,6 +238,7 @@ public class TorrentProcessor {
 
     /**
      * Sets the announce url of the torrent
+     *
      * @param url String
      */
     public void setAnnounceURL(String url) {
@@ -226,6 +247,7 @@ public class TorrentProcessor {
 
     /**
      * Sets the pieceLength
+     *
      * @param length int
      */
     public void setPieceLength(int length) {
@@ -233,7 +255,9 @@ public class TorrentProcessor {
     }
 
     /**
-     * Sets the directory the files have to be saved in (in case of multiple files torrent)
+     * Sets the directory the files have to be saved in (in case of multiple
+     * files torrent)
+     *
      * @param name String
      */
     public void setName(String name) {
@@ -242,6 +266,7 @@ public class TorrentProcessor {
 
     /**
      * Sets the comment about this torrent
+     *
      * @param comment String
      */
     public void setComment(String comment) {
@@ -249,7 +274,9 @@ public class TorrentProcessor {
     }
 
     /**
-     * Sets the creator of the torrent. This should be the client name and version
+     * Sets the creator of the torrent. This should be the client name and
+     * version
+     *
      * @param creator String
      */
     public void setCreator(String creator) {
@@ -258,6 +285,7 @@ public class TorrentProcessor {
 
     /**
      * Sets the time the torrent was created
+     *
      * @param date long
      */
     public void setCreationDate(long date) {
@@ -266,6 +294,7 @@ public class TorrentProcessor {
 
     /**
      * Sets the encoding of the torrent
+     *
      * @param encoding String
      */
     public void setEncoding(String encoding) {
@@ -274,7 +303,9 @@ public class TorrentProcessor {
 
     /**
      * Add the files in the list to the torrent
-     * @param l A list containing the File or String object representing the files to be added
+     *
+     * @param l A list containing the File or String object representing the
+     * files to be added
      * @return int The number of files that have been added
      * @throws Exception
      */
@@ -284,25 +315,29 @@ public class TorrentProcessor {
 
     /**
      * Add the files in the list to the torrent
+     *
      * @param file The file to be added
      * @return int The number of file that have been added
      * @throws Exception
      */
     public int addFile(File file) {
-        return this.addFiles(new File[] {file});
+        return this.addFiles(new File[]{file});
     }
 
     /**
      * Add the files in the list to the torrent
+     *
      * @param filename The path of the file to be added
      * @return int The number of file that have been added
      * @throws Exception
      */
     public int addFile(String filename) {
-        return this.addFiles(new String[] {filename});
+        return this.addFiles(new String[]{filename});
     }
+
     /**
      * Add the files in the list to the torrent
+     *
      * @param filenames An array containing the files to be added
      * @return int The number of files that have been added
      * @throws Exception
@@ -310,28 +345,32 @@ public class TorrentProcessor {
     public int addFiles(Object[] filenames) {
         int nbFileAdded = 0;
 
-        if (this.torrent.total_length == -1)
+        if (this.torrent.total_length == -1) {
             this.torrent.total_length = 0;
+        }
 
         for (int i = 0; i < filenames.length; i++) {
             File f = null;
-            if (filenames[i] instanceof String)
+            if (filenames[i] instanceof String) {
                 f = new File((String) filenames[i]);
-            else if (filenames[i] instanceof File)
+            } else if (filenames[i] instanceof File) {
                 f = (File) filenames[i];
-            if (f != null)
+            }
+            if (f != null) {
                 if (f.exists()) {
                     this.torrent.total_length += f.length();
                     this.torrent.name.add(f.getPath());
                     this.torrent.length.add(new Long(f.length()).intValue());
                     nbFileAdded++;
                 }
+            }
         }
         return nbFileAdded;
     }
 
     /**
      * Generate the SHA-1 hashes for the file in the torrent in parameter
+     *
      * @param torr TorrentFile
      */
     public void generatePieceHashes(TorrentFile torr) {
@@ -355,13 +394,17 @@ public class TorrentProcessor {
                             bb.clear();
                         }
                     }
-                } catch (FileNotFoundException fnfe) {} catch (IOException ioe) {}
+                } catch (FileNotFoundException fnfe) {
+                } catch (IOException ioe) {
+                }
             }
         }
-        if (bb.remaining() != bb.capacity())
+        if (bb.remaining() != bb.capacity()) {
             torr.piece_hash_values_as_binary.add(Utils.hash(Utils.subArray(
                     bb.array(), 0, bb.capacity() - bb.remaining())));
+        }
     }
+
     /**
      * Generate the SHA-1 hashes for the files in the current object TorrentFile
      */
@@ -370,39 +413,54 @@ public class TorrentProcessor {
     }
 
     /**
+     * Generate the bytes for the current object TorrentFile
+     *
+     * @return byte[]
+     */
+    public byte[] generateTorrent() {
+        return this.generateTorrent(this.torrent);
+    }
+
+    /**
      * Generate the bytes of the bencoded TorrentFile data
+     *
      * @param torr TorrentFile
      * @return byte[]
      */
     public byte[] generateTorrent(TorrentFile torr) {
         SortedMap map = new TreeMap();
         map.put("announce", torr.announceURL);
-        if(torr.comment.length() > 0)
+        if (torr.comment.length() > 0) {
             map.put("comment", torr.comment);
-        if(torr.creationDate >= 0)
+        }
+        if (torr.creationDate >= 0) {
             map.put("creation date", torr.creationDate);
-        if(torr.createdBy.length() > 0)
+        }
+        if (torr.createdBy.length() > 0) {
             map.put("created by", torr.createdBy);
+        }
 
         SortedMap info = new TreeMap();
         if (torr.name.size() == 1) {
             info.put("length", (Integer) torr.length.get(0));
             info.put("name", new File((String) torr.name.get(0)).getName());
         } else {
-            if (!torr.saveAs.matches(""))
+            if (!torr.saveAs.matches("")) {
                 info.put("name", torr.saveAs);
-            else
+            } else {
                 info.put("name", "noDirSpec");
+            }
             ArrayList files = new ArrayList();
             for (int i = 0; i < torr.name.size(); i++) {
                 SortedMap file = new TreeMap();
                 file.put("length", (Integer) torr.length.get(i));
                 String[] path = ((String) torr.name.get(i)).split("\\\\");
-                File f = new File((String)(torr.name.get(i)));
+                File f = new File((String) (torr.name.get(i)));
 
                 ArrayList pathList = new ArrayList(path.length);
-                for (int j = (path.length > 1) ? 1 : 0; j < path.length; j++)
+                for (int j = (path.length > 1) ? 1 : 0; j < path.length; j++) {
                     pathList.add(path[j]);
+                }
                 file.put("path", pathList);
                 files.add(file);
             }
@@ -410,10 +468,11 @@ public class TorrentProcessor {
         }
         info.put("piece length", torr.pieceLength);
         byte[] pieces = new byte[0];
-        for (int i = 0; i < torr.piece_hash_values_as_binary.size(); i++)
+        for (int i = 0; i < torr.piece_hash_values_as_binary.size(); i++) {
             pieces = Utils.concat(pieces,
-                                  (byte[]) torr.piece_hash_values_as_binary.
-                                  get(i));
+                    (byte[]) torr.piece_hash_values_as_binary.
+                    get(i));
+        }
         info.put("pieces", pieces);
         map.put("info", info);
         try {
@@ -426,18 +485,11 @@ public class TorrentProcessor {
     }
 
     /**
-     * Generate the bytes for the current object TorrentFile
-     * @return byte[]
-     */
-    public byte[] generateTorrent() {
-        return this.generateTorrent(this.torrent);
-    }
-
-    /**
      * Returns the local TorrentFile in its current state
+     *
      * @return TorrentFile
      */
-    public TorrentFile getTorrent(){
+    public TorrentFile getTorrent() {
         return this.torrent;
     }
 
