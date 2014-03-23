@@ -61,25 +61,6 @@ public class TorrentProcessor {
         this.torrent = new TorrentFile();
     }
 
-//    /**
-//     * Given the path of a torrent, parse the file and represent it as a Map
-//     * @param filename String
-//     * @return Map
-//     */
-//    public Map parseTorrent(String filename){
-//        return this.parseTorrent(new File(filename));
-//    }
-//    /**
-//     * Given a File (supposed to be a torrent), parse it and represent it as a Map
-//     * @param file File
-//     * @return Map
-//     */
-//    public Map parseTorrent(File file){
-//        try{
-//            return BDecoder.decode(IOManager.readBytesFromFile(file));
-//        } catch(IOException ioe){}
-//        return null;
-//    }
     /**
      * Given a Map, retrieve all useful information and represent it as a
      * TorrentFile object
@@ -451,16 +432,18 @@ public class TorrentProcessor {
                 info.put("name", "noDirSpec");
             }
             ArrayList files = new ArrayList();
+            
             for (int i = 0; i < torr.name.size(); i++) {
+                
                 SortedMap file = new TreeMap();
                 file.put("length", (Integer) torr.length.get(i));
-                String[] path = ((String) torr.name.get(i)).split("\\\\");
-                File f = new File((String) (torr.name.get(i)));
+                
+                String[] path = ((String) torr.name.get(i)).split(System.getProperty("file.separator"));
 
                 ArrayList pathList = new ArrayList(path.length);
-                for (int j = (path.length > 1) ? 1 : 0; j < path.length; j++) {
-                    pathList.add(path[j]);
-                }
+
+                pathList.add(path[path.length-1]);
+
                 file.put("path", pathList);
                 files.add(file);
             }
