@@ -33,7 +33,7 @@ public class FileTools {
         boolean contains = false;
         
         for (String s: fileType) {
-            if (f.toString().contains(s)) {
+            if (f.toString().contains("." + s)) {
                 contains = true;
             }
         }
